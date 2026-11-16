@@ -1,0 +1,43 @@
+name: docker-app
+
+services:
+  # 1. The PostgreSQL Database Service
+  postgres-db:
+    image: postgres:17
+    restart: always
+    container_name: my-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=prince
+      - POSTGRES_DB=prince
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  # 2. The pgAdmin UI Service
+  pg-admin:
+    image: dpage/pgadmin4:latest
+    container_name: my-pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=princepal262501@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=774623@prince
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - app-net
+    depends_on:
+      - postgres-db
+
+# 3. Custom Network for Container-to-Container Communication
+networks:
+  app-net:
+
+volumes:
+  pg-data:
+  pgadmin-data:
